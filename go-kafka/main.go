@@ -21,7 +21,7 @@ func main() {
 	// 创建 Kafka 消费者
 	consumer, err := sarama.NewConsumer([]string{"localhost:9092"}, nil)
 	if err != nil {
-		log.Fatal("Failed to create consumer: ", err)
+		log.Fatal("Failed to create consum: ", err)
 	}
 	defer consumer.Close()
 
@@ -42,7 +42,7 @@ func main() {
 	// 从 Kafka 接收消息
 	partitionConsumer, err := consumer.ConsumePartition(topic, 0, sarama.OffsetOldest)
 	if err != nil {
-		log.Fatal("Failed to create partition consumer: ", err)
+		log.Fatal("Failed to create partition consum: ", err)
 	}
 	defer partitionConsumer.Close()
 
