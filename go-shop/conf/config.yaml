@@ -1,0 +1,11 @@
+redis:
+  host: 127.0.0.1:23001
+  db: 0
+  pwd: ""
+
+mysql:
+  host: 127.0.0.1
+  port: 3306
+  database: ""
+  username: ""
+  pwd: ""
