@@ -3,22 +3,32 @@ package service
 import (
 	"context"
 	"fmt"
+	"go-stacks/register_store"
 	"log"
 	"net/http"
 )
 
-func Start(ctx context.Context, serviceName, host, port string, registerHandlesFunc func()) (context.Context, error) {
+// 启动服务
+func Start(ctx context.Context, host, port string, reg register_store.Registration,
+	registerHandlesFunc func()) (context.Context, error) {
 	registerHandlesFunc()
-	ctx = startSevvice(ctx, serviceName, host, port)
+	//启动某个服务
+	ctx = startService(ctx, reg.ServiceName, host, port)
+	//启动某个服务后注册到服务里面
+	err := register_store.RegisterService(reg)
+	if err != nil {
+		return ctx, nil
+	}
 	return ctx, nil
 }
 
-func startSevvice(ctx context.Context, serviceName, host, port string) context.Context {
+func startService(ctx context.Context, serviceName register_store.ServiceName, host,
+	port string) context.Context {
 	ctx, cancel := context.WithCancel(ctx)
 	var srv http.Server
 	srv.Addr = ":" + port
 	go func() {
-		log.Panicln(srv.ListenAndServe())
+		log.Println(srv.ListenAndServe())
 		cancel()
 	}()
 

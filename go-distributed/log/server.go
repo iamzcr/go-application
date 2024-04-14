@@ -11,6 +11,7 @@ var log *stlog.Logger
 
 type fileLog string
 
+// 写入日志到文件
 func (fl fileLog) Write(data []byte) (int, error) {
 	f, err := os.OpenFile(string(fl), os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0600)
 	if err != nil {
@@ -20,6 +21,7 @@ func (fl fileLog) Write(data []byte) (int, error) {
 	return f.Write(data)
 }
 
+// 构造创建方法
 func Run(destination string) {
 	log = stlog.New(fileLog(destination), "go", stlog.LstdFlags)
 }
