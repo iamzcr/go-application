@@ -2,6 +2,8 @@ package register_store
 
 import (
 	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"sync"
@@ -49,8 +51,37 @@ func (s RegistryService) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 		log.Printf("Adding service: %v with URL:%s\\n", r.ServiceName, r.ServiceURL)
 		err = reg.add(r)
+	case http.MethodDelete:
+		payload, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			log.Println(err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		url := string(payload)
+		log.Printf("Removing service at URL: %s", url)
+		err = reg.remove(url)
+		if err != nil {
+			log.Println(err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
 	}
+}
+
+// 取消服务
+func (r *registry) remove(url string) error {
+	for i := range reg.registrations {
+		if reg.registrations[i].ServiceURL == url {
+			r.mutex.Lock()
+			reg.registrations = append(reg.registrations[:i], reg.registrations[i:]...)
+			r.mutex.Unlock()
+			return nil
+		}
+	}
+	return fmt.Errorf("Service at URL %s not found", url)
 }

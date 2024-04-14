@@ -8,11 +8,9 @@
 ```
 cd /go_application/go-distributed/cmd/registerservice
 go run main.go
-
 ```
 ##### 先运行日志服务的注册
 ```
 cd /go_application/go-distributed/cmd/logservice
 go run main.go
-
 ```

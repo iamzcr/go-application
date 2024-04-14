@@ -27,15 +27,24 @@ func startService(ctx context.Context, serviceName register_store.ServiceName, h
 	ctx, cancel := context.WithCancel(ctx)
 	var srv http.Server
 	srv.Addr = ":" + port
+	//启动某个服务
 	go func() {
 		log.Println(srv.ListenAndServe())
+		err := register_store.ShutdownService(fmt.Sprintf("http://%s:%s", host, port))
+		if err != nil {
+			log.Println(err)
+		}
 		cancel()
 	}()
-
+	//手动停止某个服务
 	go func() {
 		fmt.Printf("%v start press any key to stop\n", serviceName)
 		var s string
 		fmt.Scanln(&s)
+		err := register_store.ShutdownService(fmt.Sprintf("http://%s:%s", host, port))
+		if err != nil {
+			log.Println(err)
+		}
 		srv.Shutdown(ctx)
 		cancel()
 	}()
