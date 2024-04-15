@@ -1,0 +1,10 @@
+redis:
+  host: 127.0.0.1:23001
+  db: 0
+  pwd: ""
+canal:
+  host: 127.0.0.1
+  port: 11111
+  example: example
+  username: ""
+  password: ""
