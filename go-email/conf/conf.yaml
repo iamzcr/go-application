@@ -1,0 +1,6 @@
+email:
+  username: 你的邮件
+  password: 你的邮箱smtp密码
+  host: smtp.163.com
+  port: 465
+  ssl: true
